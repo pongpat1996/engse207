@@ -146,9 +146,11 @@
             $("#buttonCall").hide();
             $("#buttonDisConnect").hide();
             $("#buttonConnect").show();
+            $("#select").hide();
+            $("#Agent").hide();
+            $("#message").hide();
+            $("#send").hide();
             $("#nodata").hide();
-            $("#statusDropdown").hide();
-            $("#messageSection").hide();
             //$("#errMessage").show();
             $("#agent").focus();
             //alert(localStorage.getItem("switch_104_02"));
@@ -218,8 +220,10 @@
                                 $("reports").show();
                                 $("#buttonDisConnect").show();
                                 $("#buttonCall").show();
-                                $("#statusDropdown").show();
-                                $("#messageSection").show();
+                                $("#select").show();
+                                $("#Agent").show();
+                                $("#message").show();
+                                $("#send").show();
                                 IsLogin = 1;
 
                                 //-------- Web Socket ----------
@@ -410,8 +414,10 @@
             $("#buttonCall").hide();
             $("#nodata").hide();
             $("#basicUsage").hide();
-            $("#statusDropdown").hide();
-            $("#messageSection").hide();
+            $("#select").hide();
+            $("#Agent").hide();
+            $("#message").hide();
+            $("#send").hide();
             // ws = new WebSocket("ws://" + WebSecketServer + "/?agentcode=" + AgentCode);
 
             //-------- Web Socket ----------
@@ -754,80 +760,6 @@
             }
         }
 
-        function updateAgentStatus() {
-            var newStatus = $("#agentStatus").val();
-
-            var data = {
-                AgentCode: AgentCode,
-                AgentName: $("#agent").val(),
-                IsLogin: 1,
-                AgentStatus: newStatus
-            };
-            
-            $.ajax({
-                url: APIServer + "/postOnlineAgentStatus",
-                headers: {
-                    'Authorization': 'Bearer 1aaZ!ARgAQGuQzp00D5D000000.mOv2jmhXkfIsjgywpCIh7.HZpc6vED1LCbc90DTaVDJwdNqbTW5r4uZicv8AFfkOE1ialqnR8UN5.wnAgh090h',
-                    'Content-Type': 'application/json'
-                },
-                method: 'POST',
-                data: JSON.stringify(data),
-                timeout: 15000,
-                success: function(response) {
-                    console.log("Status updated successfully", response);
-                    if (!response.error) {
-                        statusDisplay(newStatus);
-                    } else {
-                        console.error("Error updating status:", response.errMessage);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error updating status:", error);
-                }
-            });
-        }
-
-        function sendMessage() {
-            var toAgentCode = $("#toAgentCode").val();
-            var message = $("#messageInput").val();
-            
-            if (!toAgentCode || !message) {
-                alert("Please enter both Agent Code and Message");
-                return;
-            }
-            
-            var data = {
-                FromAgentCode: AgentCode,
-                ToAgentCode: toAgentCode,
-                Message: message
-            };
-            
-            $.ajax({
-                url: APIServer + "/postSendMessage",
-                headers: {
-                    'Authorization': 'Bearer 1aaZ!ARgAQGuQzp00D5D000000.mOv2jmhXkfIsjgywpCIh7.HZpc6vED1LCbc90DTaVDJwdNqbTW5r4uZicv8AFfkOE1ialqnR8UN5.wnAgh090h',
-                    'Content-Type': 'application/json'
-                },
-                method: 'POST',
-                data: JSON.stringify(data),
-                timeout: 15000,
-                success: function(response) {
-                    console.log("Message sent successfully", response);
-                    if (!response.error) {
-                        $("#messageInput").val('');
-                        alert("Message sent successfully");
-                    } else {
-                        console.error("Error sending message:", response.errMessage);
-                        alert("Error sending message: " + response.errMessage);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error sending message:", error);
-                    alert("Error sending message. Please try again.");
-                }
-            });
-        }
-
     </script>
 
     <!------------------------------------>
@@ -878,26 +810,6 @@
                                 onclick="notify()">
                                 Notification
                             </button>
-                        </div>
-
-                        <div id="statusDropdown" style="display: none;" class="col-sm-12 mt-3 text-center">
-                            <img id="icon" src="./assets/icon/na.png" alt="Status Icon" style="width:50px;height:50px;">
-                            <select id="agentStatus" class="form-select-lg" onchange="updateAgentStatus()">
-                                <option value="1">Available</option>
-                                <option value="2">Active</option>
-                                <option value="3">Wrap</option>
-                                <option value="4">Not Ready</option>
-                            </select>
-                        </div>
-            
-                        <div id="messageSection" style="display: none;" class="col-sm-12 mt-3 text-center">
-                            <div class="input-group">
-                                <input type="text" class="input-primary btn-sm shadow btn-block mt-2" id="toAgentCode" placeholder="To Agent Code" />
-                                <input type="text" class="input-primary btn-sm shadow btn-block mt-2" id="messageInput" placeholder="Type message here" />
-                                <button id="sendButton" class="btn btn-success" onclick="sendMessage()">
-                                    Send
-                                </button>
-                            </div>
                         </div>
 
                     </div>
